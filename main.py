@@ -94,7 +94,7 @@ if __name__ == '__main__':
     print('START UP')
     print('FROM: {} TO: {}'.format(email_from, email_to))
 
-    set_number_adults(1)
+    set_number_adults(4)
     proceed_date_selection()
 
     while(1):
