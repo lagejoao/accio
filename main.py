@@ -59,8 +59,8 @@ def search_available_days(days):
     return available_days
 
 def refresh_calendar(month, year):
-    # selecting another year to force refresh
-    select_year("2019")
+    # selecting another month to force refresh
+    select_month("February")
 
     select_month(month)
     select_year(year)
@@ -89,6 +89,7 @@ if __name__ == '__main__':
     email_to = os.environ['EMAIL_TO'].split(',')
 
     init_email(email_from, email_password)
+    send_mail(email_from, email_to, 'STARTED!')
 
     print('START UP')
     print('FROM: {} TO: {}'.format(email_from, email_to))
@@ -97,7 +98,7 @@ if __name__ == '__main__':
     proceed_date_selection()
 
     while(1):
-        refresh_calendar('October', '2019')
+        refresh_calendar('October', '2018')
         days = search_available_days([17])
 
         if len(days):
