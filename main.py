@@ -14,9 +14,7 @@ chrome_options.add_argument('--window-size=1420,1080')
 chrome_options.add_argument('--headless')
 chrome_options.add_argument('--disable-gpu')
 
-
-driver = webdriver.Chrome(chrome_options=chrome_options)
-server = smtplib.SMTP('smtp.gmail.com', 587) 
+driver = webdriver.Chrome(options=chrome_options) 
 
 target = 'https://tickets.wbstudiotour.co.uk/webstore/shop/ViewItems.aspx?CG=HPTST2&C=TIX2'
 website = driver.get(target)
@@ -72,22 +70,17 @@ def refresh_calendar(month, year):
     select_month(month)
     select_year(year)
 
-def init_email(gmail_user, gmail_password):
+def send_mail(email_from, email_to, text, gmail_password):
+    subject = 'Harry Checker'  
+    message = 'Subject: {}\n\n{}'.format(subject, text)
+
+    # sending the mail 
+    server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls() 
-    server.login(gmail_user, gmail_password)
+    server.login(email_from, gmail_password)
+    server.sendmail(email_from, email_to, message)
+    server.close()
 
-def send_mail(email_from, email_to, text):
-    try:
-        subject = 'Harry Checker'  
-        message = 'Subject: {}\n\n{}'.format(subject, text)
-
-        # sending the mail 
-        server.sendmail(email_from, email_to, message)
-        server.close()
-
-        print('Sent!')
-    except Exception as e:
-        print('Something went wrong...', e)
 
 if __name__ == '__main__':
 
@@ -95,23 +88,22 @@ if __name__ == '__main__':
     email_password = os.environ['EMAIL_PASSWORD']
     email_to = os.environ['EMAIL_TO'].split(',')
 
-    init_email(email_from, email_password)
-    send_mail(email_from, email_to, 'STARTED!')
+    send_mail(email_from, email_from, 'STARTED!', email_password)
 
     print('START UP')
     print('FROM: {} TO: {}'.format(email_from, email_to))
 
-    set_number_adults(4)
+    set_number_adults(1)
     proceed_date_selection()
 
     while(1):
-        refresh_calendar('October', '2018')
+        refresh_calendar('October', '2019')
         days = search_available_days([17])
 
         if len(days):
             message = 'Days found: ' + str(days)
             print(message)
-            send_mail(email_from, email_to, message)
+            send_mail(email_from, email_to, message, email_password)
             break
 
     driver.quit()
